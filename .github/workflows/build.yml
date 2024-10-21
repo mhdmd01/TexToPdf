@@ -1,5 +1,8 @@
 name: Build LaTeX
 
+permissions:
+  contents: write
+
 on:
   push:
     branches:
@@ -37,6 +40,8 @@ jobs:
         mv documento.pdf documento-develop.pdf
         git add documento-develop.pdf
         git commit -m "Aggiunto PDF generato da documento.tex"
-        git push origin main
+        git pull origin main --rebase
+        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/mhdmd01/TexToPdf.git main 
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
