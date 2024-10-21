@@ -23,14 +23,14 @@ jobs:
         pdflatex documento.tex
         # Aggiungi ulteriori comandi pdflatex se necessario (es. bibliografia)
 
-    - name: Commit and push PDF to master branch
+    - name: Commit and push PDF to main branch
       run: |
         git config --global user.name "GitHub Action"
         git config --global user.email "action@github.com"
-        git checkout master
+        git checkout main
         mv documento.pdf documento-develop.pdf
         git add documento-develop.pdf
         git commit -m "Aggiunto PDF generato da documento.tex"
-        git push origin master
+        git push origin main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
