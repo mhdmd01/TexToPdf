@@ -27,6 +27,13 @@ jobs:
       run: |
         git config --global user.name "GitHub Action"
         git config --global user.email "action@github.com"
+
+        if git show-ref --verify --quiet refs/heads/main; then
+          git checkout main
+        else
+          git checkout -b main
+        fi
+        
         mv documento.pdf documento-develop.pdf
         git add documento-develop.pdf
         git commit -m "Aggiunto PDF generato da documento.tex"
