@@ -1,0 +1,47 @@
+name: Build LaTeX
+
+permissions:
+  contents: write
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Install TeX Live
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y texlive-latex-base texlive-fonts-recommended texlive-latex-extra
+
+    - name: Compile LaTeX to PDF
+      run: |
+        pdflatex documento.tex
+        # Aggiungi ulteriori comandi pdflatex se necessario (es. bibliografia)
+
+    - name: Commit and push PDF to main branch
+      run: |
+        git config --global user.name "GitHub Action"
+        git config --global user.email "action@github.com"
+
+        if git show-ref --verify --quiet refs/heads/main; then
+          git checkout main
+        else
+          git checkout -b main
+        fi
+        
+        mv documento.pdf documento-develop.pdf
+        git add documento-develop.pdf
+        git commit -m "Aggiunto PDF generato da documento.tex"
+        git pull origin main --rebase
+        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/mhdmd01/TexToPdf.git main 
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
